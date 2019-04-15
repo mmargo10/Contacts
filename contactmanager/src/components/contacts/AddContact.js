@@ -8,13 +8,30 @@ import uuid from 'uuid';
    state = {
      name: '',
      email: '',
-     phone: ''
+     phone: '',
+     errors: {}
    };
 
    onSubmit = (dispatch, e) => {
      e.preventDefault();
 
      const { name, email, phone } = this.state;
+
+     //Check for Errors
+     if(name === '') {
+       this.setState({errors: { name: 'Name is required' }});
+       return;
+     }
+
+     if(email === '') {
+      this.setState({errors: { email: 'Email is required' }});
+      return;
+    }
+
+    if(phone === '') {
+      this.setState({errors: { phone: 'Phone number is required' }});
+      return;
+    }
 
      const newContact = {
        id: uuid(),
@@ -29,7 +46,8 @@ import uuid from 'uuid';
      this.setState({
        name: '',
        email: '',
-       phone: ''
+       phone: '',
+       errors: {}
      });
    };
 
@@ -37,7 +55,7 @@ import uuid from 'uuid';
 
 
   render() {
-    const { name, email, phone } = this.state;
+    const { name, email, phone, errors } = this.state;
     return (
       <Consumer>
         {value => {
@@ -55,6 +73,7 @@ import uuid from 'uuid';
               placeholder="Enter Name"
               value={name}
               onChange={this.onChange}
+              error={errors.name}
              />
              <TextInputGroup 
               label="Email"
@@ -63,6 +82,7 @@ import uuid from 'uuid';
               placeholder="Enter Email"
               value={email}
               onChange={this.onChange}
+              error={errors.email}
              />
              <TextInputGroup 
               label="Phone"
@@ -70,8 +90,10 @@ import uuid from 'uuid';
               placeholder="Enter Phone"
               value={phone}
               onChange={this.onChange}
+              error={errors.phone}
              />
-              <input type="submit" 
+              <input 
+              type="submit" 
               value="Add Contact"
               className="btn btn-light btn-block" />
             </form>
